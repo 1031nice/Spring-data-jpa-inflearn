@@ -7,7 +7,9 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Component
 @Transactional
@@ -19,6 +21,13 @@ public class JpaRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
+        // 아래의 쿼리는 JPQL로 DB에 독립적인 쿼리, 데이터 테이블이 아닌 엔티티 객체 모델을 기준으로 작성
+        TypedQuery<Post> query = entityManager.createQuery("SELECT p FROM Post AS p", Post.class);
+        List<Post> posts = query.getResultList();
+        posts.forEach(System.out::println);
+
+/*
+        Fetch
         Session session = entityManager.unwrap(Session.class);
         Post post = session.get(Post.class, 1l);
         System.out.println("=============");
@@ -27,7 +36,7 @@ public class JpaRunner implements ApplicationRunner {
         post.getComments().forEach(c -> {
             System.out.println("---------------");
             System.out.println(c.getComment());
-        });
+        });*/
 
         /*Comment comment = session.get(Comment.class, 2l); // 여기서 Post가지 가져옴
         System.out.println("=============");

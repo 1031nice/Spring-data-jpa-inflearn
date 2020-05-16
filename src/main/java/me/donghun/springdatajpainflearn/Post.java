@@ -40,4 +40,11 @@ public class Post {
         this.comments = comments;
     }
 
+    // toString 주의할 것. 여기서 comments까지 찍으면 쿼리날라가서 comment까지 받아온다
+    @Override
+    public String toString() {
+        return "Post{" +
+                "title='" + title + '\'' +
+                '}';
+    }
 }
