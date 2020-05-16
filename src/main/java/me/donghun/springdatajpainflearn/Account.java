@@ -36,7 +36,6 @@ public class Account {
 //    @Embedded
 //    private Address officeAddress;
 
-
     public Set<Study> getStudies() {
         return studies;
     }

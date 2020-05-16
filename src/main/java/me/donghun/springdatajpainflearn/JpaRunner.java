@@ -18,7 +18,28 @@ public class JpaRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        Account account = new Account();
+
+        Post post = new Post();
+        post.setTitle("Spring data jpa");
+
+        Comment comment = new Comment();
+        comment.setComment("Hello world");
+        post.addComment(comment);
+
+        Comment comment1 = new Comment();
+        comment1.setComment("World Hello");
+        post.addComment(comment1);
+
+        Session session = entityManager.unwrap(Session.class);
+        session.save(post); // cascade type으로 persist를 주었기 때문에 post의 변경사항이 comment에도 전파
+
+
+        // persistent에서 removed가 되고 cascade type으로 removed를 주었기 때문에
+        // transaction이 끝나고 이게 commit이 될 때 cascade가 일어나서 comment까지 삭제
+/*        Post post2 = session.get(Post.class, 1l);
+        session.delete(post2); */
+
+        /*        Account account = new Account();
         account.setUsername("donghun");
         account.setPassword("1234");
 
@@ -34,6 +55,18 @@ public class JpaRunner implements ApplicationRunner {
         session.save(account); // hibernate 이용하기
         session.save(study);
 
-//        entityManager.persist(account);
+        // save 했다고 바로 DB에 올라가진 않는다
+        // 일단 1차 캐시에 저장됨. 따라서 아래의 요청은 쿼리 발생하지 않음(DB에 가지 않음)
+        Account donghun = session.load(Account.class, account.getId());
+        System.out.println(donghun.getUsername());
+        donghun.setUsername("Apple"); // 쿼리 발생 X
+        donghun.setUsername("Banana"); // 쿼리 발생 X
+//        donghun.setUsername("Chair"); // update 하라고 한 적 없는데 update 쿼리 발생
+        donghun.setUsername("donghun"); // 쿼리 발생 X dirty checking으로 변경사항 추적하고 있는데
+        // 처음 이름과 똑같으므로 update 안함
+        System.out.println(donghun.getUsername());
+
+        // save는 transaction이 끝나서 commit을 해야할 때 이루어짐
+//        entityManager.persist(account);*/
     }
 }
