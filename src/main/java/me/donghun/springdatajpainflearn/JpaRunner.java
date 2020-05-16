@@ -19,7 +19,23 @@ public class JpaRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        Post post = new Post();
+        Session session = entityManager.unwrap(Session.class);
+        Post post = session.get(Post.class, 1l);
+        System.out.println("=============");
+        System.out.println(post.getTitle());
+
+        post.getComments().forEach(c -> {
+            System.out.println("---------------");
+            System.out.println(c.getComment());
+        });
+
+        /*Comment comment = session.get(Comment.class, 2l); // 여기서 Post가지 가져옴
+        System.out.println("=============");
+        System.out.println(comment.getComment());
+        System.out.println(comment.getPost().getTitle()); // Many to one은 위에서 바로 가져오므로 쿼리 발생 X
+*/
+
+        /*        Post post = new Post();
         post.setTitle("Spring data jpa");
 
         Comment comment = new Comment();
@@ -31,7 +47,7 @@ public class JpaRunner implements ApplicationRunner {
         post.addComment(comment1);
 
         Session session = entityManager.unwrap(Session.class);
-        session.save(post); // cascade type으로 persist를 주었기 때문에 post의 변경사항이 comment에도 전파
+        session.save(post); */// cascade type으로 persist를 주었기 때문에 post의 변경사항이 comment에도 전파
 
 
         // persistent에서 removed가 되고 cascade type으로 removed를 주었기 때문에
