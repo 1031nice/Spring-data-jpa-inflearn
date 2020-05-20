@@ -4,6 +4,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -20,17 +23,20 @@ public class CommentRepositoryTest {
 
     @Test
     public void crud(){
-        Comment comment = new Comment();
-        comment.setComment("Hello Comment");
-        commentRepository.save(comment);
+        this.createComment(100, "spring data jpa");
+        this.createComment(55, "HIBERNATE SPRING");
 
-        List<Comment> all = commentRepository.findAll();
-        assertThat(all.size()).isEqualTo(1);
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "LikeCount"));
 
-        Optional<Comment> byId = commentRepository.findById(100l);
-        assertThat(byId).isEmpty();
-//        Comment comment2 = byId.orElse(new Comment()); // 없으면 내가 만든 Comment 객체가 들어간다
-        Comment comment1 = byId.orElseThrow(IllegalArgumentException::new); // 없으면 예외 던지기
+        Page<Comment> comments = commentRepository.findByCommentContainsIgnoreCase("spring", pageRequest);
+        assertThat(comments.getNumberOfElements()).isEqualTo(2);
+        assertThat(comments).first().hasFieldOrPropertyWithValue("likeCount", 100);
+    }
 
+    private void createComment(int likeCount, String comment){
+        Comment newComment = new Comment();
+        newComment.setLikeCount(likeCount);
+        newComment.setComment(comment);
+        commentRepository.save(newComment);
     }
 }
