@@ -5,7 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@EnableJpaRepositories(repositoryImplementationPostfix = "Impl") // 이걸 통해서 접미어 바꿀 수 있음
+// 이걸 통해서 접미어 바꿀 수 있음
+@EnableJpaRepositories(repositoryImplementationPostfix = "Impl", repositoryBaseClass = SimpleMyRepository.class)
 public class Application {
 
     public static void main(String[] args) {
