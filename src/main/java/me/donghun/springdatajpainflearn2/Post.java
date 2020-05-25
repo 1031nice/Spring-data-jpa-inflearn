@@ -1,10 +1,12 @@
 package me.donghun.springdatajpainflearn2;
 
+import org.springframework.data.domain.AbstractAggregateRoot;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-public class Post {
+public class Post extends AbstractAggregateRoot<Post> {
 
     @Id @GeneratedValue
     private Long id;
@@ -48,4 +50,11 @@ public class Post {
     public void setCreated(Date created) {
         this.created = created;
     }
+
+    public Post publish() {
+        // save할 때 자동으로 aggregate 안에 있던 이벤트들을 모두 발생시킨다
+        this.registerEvent(new PostPublishedEvent(this));
+        return this;
+    }
+
 }

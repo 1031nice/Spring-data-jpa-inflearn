@@ -4,6 +4,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -11,10 +13,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest // 얘 속에 roll back이 있으므로
+@Import(PostRepositoryTestConfig.class) // slicing test이기 때문에 import 해주어야 한다
 public class PostRepositoryTest2 {
 
     @Autowired
     PostRepository postRepository;
+
+    @Autowired
+    ApplicationContext applicationContext;
+
+    @Test
+    public void event(){
+        Post post = new Post();
+        post.setTitle("event");
+        PostPublishedEvent event = new PostPublishedEvent(post);
+        applicationContext.publishEvent(event);
+    }
 
     @Test
     public void crud(){
@@ -23,7 +37,7 @@ public class PostRepositoryTest2 {
 
         assertThat(postRepository.contains(post)).isFalse();
 
-        postRepository.save(post);
+        postRepository.save(post.publish());
 
         assertThat(postRepository.contains(post)).isTrue();
 
