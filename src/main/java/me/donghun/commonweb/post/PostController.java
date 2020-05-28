@@ -1,21 +1,25 @@
 package me.donghun.commonweb.post;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
 
 @RestController
 public class PostController {
 
 //    @Autowired
-    private final PostRepository postRepository;
+    private final PostRepository posts;
 
     // 생성자가 하나만 있고 인자가 Bean인 경우 알아서 주입해준다
-    public PostController(PostRepository postRepository) {
-        this.postRepository = postRepository;
+    public PostController(PostRepository posts) {
+        this.posts = posts;
+    }
+
+    @GetMapping("/posts")
+    public Page<Post> getPosts(Pageable pageable){ // Pagable을 쓰는 게 좋다 sorting도 쓸 수 있으니까
+        return posts.findAll(pageable);
     }
 
     @GetMapping("/posts/{id}")
