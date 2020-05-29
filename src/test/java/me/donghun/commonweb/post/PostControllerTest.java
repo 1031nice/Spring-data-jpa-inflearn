@@ -32,18 +32,26 @@ public class PostControllerTest {
 
     @Test // junit의 기본: 모든 test는 public void
     public void getPosts() throws Exception {
-        Post post = new Post();
-        post.setTitle("jpa");
-        postRepository.save(post);
+        createPosts();
 
         mockMvc.perform(MockMvcRequestBuilders.get("/posts/")
-                    .param("page", "0") // page는 0부터 시작
+                    .param("page", "3") // page는 0부터 시작
                     .param("size", "10")
                     .param("sort", "created,desc")
                     .param("sort", "title"))
                 .andDo(print()) // 성공했을 때도 정보를 찍어준다
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].title", Matchers.is("jpa")));
+    }
+
+    private void createPosts() {
+        int postsCount = 100;
+        while(postsCount > 0) {
+            Post post = new Post();
+            post.setTitle("jpa");
+            postRepository.save(post);
+            postsCount--;
+        }
     }
 
     @Test

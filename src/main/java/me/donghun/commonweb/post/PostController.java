@@ -2,6 +2,9 @@ package me.donghun.commonweb.post;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,8 +21,8 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public Page<Post> getPosts(Pageable pageable){ // Pagable을 쓰는 게 좋다 sorting도 쓸 수 있으니까
-        return posts.findAll(pageable);
+    public PagedModel<EntityModel<Post>> getPosts(Pageable pageable, PagedResourcesAssembler<Post> assembler){ // Pagable을 쓰는 게 좋다 sorting도 쓸 수 있으니까
+        return assembler.toModel(posts.findAll(pageable));
     }
 
     @GetMapping("/posts/{id}")
