@@ -4,6 +4,8 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+//@NamedQuery(name = "Post.findByTitle", query = "SELECT p FROM Post AS p WHERE p.title = ?1")
+// named query 단점, 도메인 엔티티 클래스가 지저분해진다 sql, jbql 코드가 들어오게 된다
 public class Post {
 
     @Id @GeneratedValue

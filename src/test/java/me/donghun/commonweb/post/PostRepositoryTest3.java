@@ -23,6 +23,29 @@ public class PostRepositoryTest3 {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Test
+    public void findByTitle(){
+        savePost();
+        List<Post> all = postRepository.findByTitle("Spring");
+        assertThat(all.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void findByTitleStartsWith(){
+        savePost();
+
+        List<Post> all = postRepository.findByTitleStartsWith("Spring");
+        assertThat(all.size()).isEqualTo(1);
+
+    }
+
+    private void savePost() {
+        Post post = new Post();
+        post.setTitle("Spring");
+        Post savedPost = postRepository.save(post);
+    }
+
+
     /*
     save는 새로운 객체라면 EntityManager의 persist(Transient -> Persistent)를,
     새로운 객체가 아니라면 merge(Detached -> Persistent)를 호출한다
