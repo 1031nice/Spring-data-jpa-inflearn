@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,6 +24,30 @@ public class PostRepositoryTest3 {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Test
+    public void updateTitle(){
+        Post spring = savePost();
+
+        String hibernate = "hibernate";
+        int update = postRepository.updateTitle("hibernate", spring.getId());
+        assertThat(update).isEqualTo(1);
+
+        Optional<Post> byId = postRepository.findById(spring.getId()); // update query ok
+        // 트랜잭션이 끝나지 않아서 캐시 유지됨 따라서 persistent 컨텍스트가 비워지지 않았기 때문에
+        // spring 객체는 계쏙 "spring"
+        // 이때 findById하면 DB안가고 자기가 캐싱하던거 그대로 준다 그래서 hibernate가 아니라 title이 spring인거다
+        // update 쿼리가 발생했음에도.
+        assertThat(byId.get().getTitle()).isEqualTo(hibernate);
+
+        /*
+        그래서 이 방법이 더 낫다
+        spring.setTitle("hibernate");
+        List<Post> all = postRepository.findAll(); // 여기서 이제 위의 변경사항을 저장해야된다고 판단하는거지
+        // 그러니까 여기서 update 쿼리가 날라간다
+        assertThat(all.get(0).getTitle()).isEqualTo("hibernate");
+         */
+    }
 
     @Test
     public void findByTitle(){
@@ -40,10 +65,10 @@ public class PostRepositoryTest3 {
 
     }
 
-    private void savePost() {
+    private Post savePost() {
         Post post = new Post();
         post.setTitle("Spring");
-        Post savedPost = postRepository.save(post);
+        return postRepository.save(post); // persist
     }
 
 
