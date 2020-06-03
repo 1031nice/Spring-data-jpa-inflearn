@@ -22,6 +22,25 @@ public class CommentRepositoryTest2 {
 
     @Test
     public void getComment(){
+        Post post = new Post();
+        post.setTitle("jpa");
+        Post savedPost = postRepository.save(post);
+
+        Comment comment = new Comment();
+        comment.setPost(savedPost);
+        comment.setUp(10);
+        comment.setDown(1);
+        comment.setComment("spring data jpa projection");
+        commentRepository.save(comment);
+
+        commentRepository.findByPost_Id(savedPost.getId(), CommentOnly.class).forEach(c -> {
+            System.out.println("===========");
+            System.out.println(c.getComment());
+        });
+    }
+
+/*    @Test
+    public void getComment(){
         commentRepository.getById(1l); // EAGER, EntityGraph 이용
 
         System.out.println("===========================");
@@ -30,5 +49,5 @@ public class CommentRepositoryTest2 {
 
         // 이런식으로 경우에 따라 원하는 전략을 쓸 수 있다
         // 각각의 메소드마다 다른 패칭 전략으로 데이터를 읽어올 수 있도록 여러 메소드를 만들 수 있다
-    }
+    }*/
 }
