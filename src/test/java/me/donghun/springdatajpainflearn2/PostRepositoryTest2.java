@@ -33,7 +33,7 @@ public class PostRepositoryTest2 {
 //        applicationContext.publishEvent(event);
 //    }
 
-    @Test
+/*    @Test
     public void crud(){
         Post post = new Post();
         post.setTitle("hibernate");
@@ -43,7 +43,7 @@ public class PostRepositoryTest2 {
         Optional<Post> one = postRepository.findOne(predicate);
         assertThat(one).isNotEmpty();
 
-    }
+    }*/
 
 /*    @Test
     public void crud(){
