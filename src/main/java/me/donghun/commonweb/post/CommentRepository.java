@@ -3,11 +3,12 @@ package me.donghun.commonweb.post;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.repository.query.QueryByExampleExecutor;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface CommentRepository extends JpaRepository<Comment, Long>, JpaSpecificationExecutor<Comment> {
+public interface CommentRepository extends JpaRepository<Comment, Long>, JpaSpecificationExecutor<Comment>, QueryByExampleExecutor<Comment> {
 
 //    @EntityGraph(attributePaths = "post") // Comment 클래스 위에 별도의 설정 지우고 그냥 이렇게도 가능
     @EntityGraph(value = "Comment.post")
