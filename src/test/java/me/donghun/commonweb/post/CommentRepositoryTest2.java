@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
@@ -16,7 +17,8 @@ import static me.donghun.commonweb.post.CommentSpecs.*;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@DataJpaTest
+//@DataJpaTest slicing test이므로 accountAuditAware 빈을 못찾음
+@SpringBootTest
 public class CommentRepositoryTest2 {
 
     @Autowired
