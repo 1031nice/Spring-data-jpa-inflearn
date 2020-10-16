@@ -13,7 +13,7 @@ public class Post {
     private String title;
 
     // one to many의 fetch 기본값은 lazy: 나중에 가져온다
-    @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.ALL})
+    @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.ALL}, fetch = FetchType.LAZY)
     private Set<Comment> comments = new HashSet<>();
 
     public void addComment(Comment comment){

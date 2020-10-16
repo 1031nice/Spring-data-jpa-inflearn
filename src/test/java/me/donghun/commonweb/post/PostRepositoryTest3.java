@@ -71,6 +71,12 @@ public class PostRepositoryTest3 {
         return postRepository.save(post); // persist
     }
 
+    @Test
+    public void lazyTest(){
+        savePost();
+        postRepository.findByTitleStartsWith("Spring");
+    }
+
 
     /*
     save는 새로운 객체라면 EntityManager의 persist(Transient -> Persistent)를,
